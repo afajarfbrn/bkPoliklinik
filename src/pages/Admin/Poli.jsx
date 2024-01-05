@@ -27,6 +27,7 @@ const Poli = () => {
     nama_poli: "",
     keterangan: "",
   });
+  const [idPoli, setIdPoli] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -43,12 +44,12 @@ const Poli = () => {
 
   const handleEdit = (id) => {
     setEdit(true);
-    dispatch(getPoliById(id));
+    setIdPoli(id);
   };
 
-  const handleSumbitEdit = (e, id) => {
+  const handleSumbitEdit = (e) => {
     e.preventDefault();
-    dispatch(updatePoli(id, poliFormEdit));
+    dispatch(updatePoli(idPoli, poliFormEdit));
     setEdit(false);
   };
 
@@ -64,6 +65,12 @@ const Poli = () => {
       });
     }
   }, [poliById]);
+
+  useEffect(() => {
+    if (idPoli) {
+      dispatch(getPoliById(idPoli));
+    }
+  }, [idPoli, dispatch]);
 
   useEffect(() => {
     if (role !== "admin") {
@@ -105,7 +112,7 @@ const Poli = () => {
               Reset Form
             </button>
             <button
-              className="bg-[#1B4242] p-2 px-3 text-sm rounded-md text-white mx-2"
+              className="bg-[#ff8d9a] p-2 px-3 text-sm rounded-md text-white mx-2"
               type="submit"
             >
               Tambah
@@ -135,7 +142,7 @@ const Poli = () => {
                         <Table.Cell>{item.keterangan}</Table.Cell>
                         <Table.Cell>
                           <button
-                            className="bg-[#5C8374] p-2 rounded text-white mx-2"
+                            className="bg-[#ff8d9a] p-2 rounded text-white mx-2"
                             onClick={() => handleEdit(item.id)}
                           >
                             Edit
@@ -148,57 +155,54 @@ const Poli = () => {
                           </button>
                         </Table.Cell>
                       </Table.Row>
-                      <Modals
-                        openModal={edit}
-                        setOpenModal={setEdit}
-                        title="Edit Poli"
-                        buttonClose={false}
-                        body={
-                          <form
-                            className="mt-[-1.5rem]"
-                            onSubmit={(e) => handleSumbitEdit(e, item.id)}
-                          >
-                            <Input
-                              label="Nama Poli"
-                              type="text"
-                              placeholder="Nama Poli"
-                              name="nama_poli"
-                              value={poliFormEdit.nama_poli}
-                              onChange={(e) =>
-                                setPoliFormEdit({
-                                  ...poliFormEdit,
-                                  nama_poli: e.target.value,
-                                })
-                              }
-                            />
-                            <TextArea
-                              label="Keterangan"
-                              type="text"
-                              placeholder="Keterangan"
-                              name="keterangan"
-                              value={poliFormEdit.keterangan}
-                              onChange={(e) =>
-                                setPoliFormEdit({
-                                  ...poliFormEdit,
-                                  keterangan: e.target.value,
-                                })
-                              }
-                            />
-                            <div className="flex justify-end mt-4">
-                              <button
-                                className="bg-[#1F4172] p-2 px-3 text-sm rounded-md text-white mx-2"
-                                type="submit"
-                              >
-                                Edit
-                              </button>
-                            </div>
-                          </form>
-                        }
-                      />
                     </>
                   ))}
                 </Table.Body>
               </Table>
+              <Modals
+                openModal={edit}
+                setOpenModal={setEdit}
+                title="Edit Poli"
+                buttonClose={false}
+                body={
+                  <form className="mt-[-1.5rem]" onSubmit={handleSumbitEdit}>
+                    <Input
+                      label="Nama Poli"
+                      type="text"
+                      placeholder="Nama Poli"
+                      name="nama_poli"
+                      value={poliFormEdit.nama_poli}
+                      onChange={(e) =>
+                        setPoliFormEdit({
+                          ...poliFormEdit,
+                          nama_poli: e.target.value,
+                        })
+                      }
+                    />
+                    <TextArea
+                      label="Keterangan"
+                      type="text"
+                      placeholder="Keterangan"
+                      name="keterangan"
+                      value={poliFormEdit.keterangan}
+                      onChange={(e) =>
+                        setPoliFormEdit({
+                          ...poliFormEdit,
+                          keterangan: e.target.value,
+                        })
+                      }
+                    />
+                    <div className="flex justify-end mt-4">
+                      <button
+                        className="bg-[#ff8d9a] p-2 px-3 text-sm rounded-md text-white mx-2"
+                        type="submit"
+                      >
+                        Edit
+                      </button>
+                    </div>
+                  </form>
+                }
+              />
             </div>
           </div>
         </div>

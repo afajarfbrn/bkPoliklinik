@@ -40,7 +40,7 @@ const DaftarPeriksa = () => {
     id_daftar_poli: periksaByDafPolId?.id_daftar_poli,
     tgl_periksa: periksaByDafPolId?.tanggal,
     catatan: periksaByDafPolId?.catatan,
-    biaya_periksa: obatValue.reduce((acc, curr) => acc + curr.harga, 0),
+    biaya_periksa: obatValue.reduce((acc, curr) => acc + curr.harga, 150000),
   });
 
   const handleEdit = (id) => {
@@ -91,7 +91,10 @@ const DaftarPeriksa = () => {
         id_daftar_poli: periksaByDafPolId.id_daftar_poli,
         tgl_periksa: periksaByDafPolId.tanggal,
         catatan: periksaByDafPolId.catatan,
-        biaya_periksa: obatValue.reduce((acc, curr) => acc + curr.harga, 0),
+        biaya_periksa: obatValue.reduce(
+          (acc, curr) => acc + curr.harga,
+          150000
+        ),
       });
     }
   }, [periksaByDafPolId, obatValue]);
@@ -141,39 +144,44 @@ const DaftarPeriksa = () => {
                 <Table.HeadCell>Aksi</Table.HeadCell>
               </Table.Head>
               <Table.Body className="divide-y">
-                {daftarPoli.map((item, index) => (
-                  <>
-                    <Table.Row key={index}>
-                      <Table.Cell>{index + 1}</Table.Cell>
-                      <Table.Cell>{item.pasien.nama}</Table.Cell>
-                      <Table.Cell>{item.keluhan}</Table.Cell>
-                      <Table.Cell width={150}>
-                        {periksa?.find(
-                          (periksa) => periksa.id_daftar_poli === item.id
-                        ) ? (
-                          <button
-                            className="bg-[#F1B4BB] p-2 rounded text-white mx-2 flex items-center"
-                            onClick={() => handleEdit(item.id)}
-                          >
-                            <FaEdit className="mr-2" /> Edit
-                          </button>
-                        ) : (
-                          <Link
-                            to={
-                              "/dokter/daftar-periksa/periksa/" +
-                              item.id +
-                              "/" +
-                              id
-                            }
-                            className="bg-[#f78f9b] p-2 rounded text-white mx-2 flex items-center w-fit"
-                          >
-                            <FaStethoscope className="mr-2" /> Periksa
-                          </Link>
-                        )}
-                      </Table.Cell>
-                    </Table.Row>
-                  </>
-                ))}
+                {daftarPoli.map((item, index) => {
+                  if (item.jadwal_periksa.id_dokter === id) {
+                    index = 0;
+                    return (
+                      <>
+                        <Table.Row key={index}>
+                          <Table.Cell>{index + 1}</Table.Cell>
+                          <Table.Cell>{item.pasien.nama}</Table.Cell>
+                          <Table.Cell>{item.keluhan}</Table.Cell>
+                          <Table.Cell width={150}>
+                            {periksa?.find(
+                              (periksa) => periksa.id_daftar_poli === item.id
+                            ) ? (
+                              <button
+                                className="bg-[#ff8d9a] p-2 rounded text-white mx-2 flex items-center"
+                                onClick={() => handleEdit(item.id)}
+                              >
+                                <FaEdit className="mr-2" /> Edit
+                              </button>
+                            ) : (
+                              <Link
+                                to={
+                                  "/dokter/daftar-periksa/periksa/" +
+                                  item.id +
+                                  "/" +
+                                  id
+                                }
+                                className="bg-[#ff6f80] p-2 rounded text-white mx-2 flex items-center w-fit"
+                              >
+                                <FaStethoscope className="mr-2" /> Periksa
+                              </Link>
+                            )}
+                          </Table.Cell>
+                        </Table.Row>
+                      </>
+                    );
+                  }
+                })}
                 <Modals
                   openModal={edit}
                   setOpenModal={() => setEdit(!edit)}
@@ -238,7 +246,7 @@ const DaftarPeriksa = () => {
                       </div>
                       <div className="flex justify-end mt-4">
                         <button
-                          className="bg-[#F1B4BB] p-2 px-3 text-sm rounded-md text-white mx-2"
+                          className="bg-[#1B4242] p-2 px-3 text-sm rounded-md text-white mx-2"
                           type="submit"
                         >
                           Simpan

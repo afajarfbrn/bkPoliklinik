@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
 export const getPoli = () => {
@@ -22,7 +23,6 @@ export const getPoliById = (id) => {
         `${import.meta.env.VITE_API_URL}api/poli/${id}`
       );
       dispatch({ type: "SET_POLI_BY_ID", payload: res.data.data });
-      console.log(res);
     } catch (err) {
       console.log(err);
       dispatch({ type: "SET_LOADING", payload: false });
@@ -35,10 +35,12 @@ export const addPoli = (data) => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
       await axios.post(`${import.meta.env.VITE_API_URL}api/poli/`, data);
+      toast.success("Berhasil ditambahkan");
       dispatch(getPoli());
     } catch (err) {
       console.log(err);
       dispatch({ type: "SET_LOADING", payload: false });
+      toast.error(err.response.data.error);
     }
   };
 };
@@ -71,15 +73,13 @@ export const updatePoli = (id, data) => {
   return async (dispatch) => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
-      const res = await axios.put(
-        `${import.meta.env.VITE_API_URL}api/poli/${id}`,
-        data
-      );
-      console.log(res);
+      await axios.put(`${import.meta.env.VITE_API_URL}api/poli/${id}`, data);
       dispatch(getPoli());
+      toast.success("Berhasil diupdate");
     } catch (err) {
       console.log(err);
       dispatch({ type: "SET_LOADING", payload: false });
+      toast.error(err.response.data.error);
     }
   };
 };

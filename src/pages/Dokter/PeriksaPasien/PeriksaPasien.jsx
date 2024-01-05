@@ -28,7 +28,7 @@ const PeriksaPasien = () => {
   });
   const [obatOption, setObatOption] = useState([]);
   const [obatSelected, setObatSelected] = useState([]);
-  const [biayaPeriksa, setBiayaPeriksa] = useState(0);
+  const [biayaPeriksa, setBiayaPeriksa] = useState(150000);
   const nav = useNavigate();
 
   const formatPriceInRupiah = (price) => {
@@ -74,10 +74,10 @@ const PeriksaPasien = () => {
     if (obatSelected.length > 0) {
       const newBiayaPeriksa = obatSelected.reduce((acc, item) => {
         return acc + item.harga;
-      }, 0);
+      }, 150000);
       setBiayaPeriksa(newBiayaPeriksa);
     } else {
-      setBiayaPeriksa(0);
+      setBiayaPeriksa(150000);
     }
   }, [obatSelected]);
 
@@ -139,7 +139,7 @@ const PeriksaPasien = () => {
             </div>
             <div className="flex justify-end mt-4">
               <button
-                className="bg-[#F1B4BB] p-2 rounded text-white mx-2"
+                className="bg-[#ff8d9a] p-2 rounded text-white mx-2"
                 type="submit"
               >
                 Simpan

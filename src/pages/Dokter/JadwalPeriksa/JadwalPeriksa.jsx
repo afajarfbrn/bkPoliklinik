@@ -1,5 +1,5 @@
 import { Table } from "flowbite-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -19,6 +19,7 @@ const JadwalPeriksa = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { jadwalPeriksa } = useSelector((state) => state.jadwalPeriksaReducer);
+  const [jadwal, setJadwal] = useState([]);
 
   const timeFormat = (time) => {
     const date = new Date(`1970-01-01T${time}`);
@@ -45,6 +46,38 @@ const JadwalPeriksa = () => {
   const handleDelete = (id) => {
     dispatch(deleteJadwalPeriksa(id));
   };
+
+  useEffect(() => {
+    // Mendapatkan waktu saat ini
+    const now = new Date();
+
+    // Mendapatkan waktu satu jam ke depan dari saat ini
+
+    // Lakukan pengecekan untuk setiap item jadwalPeriksa
+    const updatedJadwal = jadwalPeriksa.map((item) => {
+      if (item.id_dokter === id) {
+        // Mendapatkan waktu mulai dari jadwal periksa saat ini
+        const tanggal = item.tanggal.split(" ")[0];
+        const startTime = new Date(`${tanggal}T${item.jam_mulai}`);
+        const oneHourBefore = new Date(startTime.getTime() - 60 * 60 * 1000); // Satu jam sebelum
+
+        // Jika waktu mulai dari jadwal periksa saat ini lebih dari satu jam sebelum waktu saat ini
+        // maka disableEdit: false
+        if (
+          startTime > oneHourBefore &&
+          startTime > now &&
+          now <= oneHourBefore
+        ) {
+          item.disableEdit = false;
+        } else {
+          item.disableEdit = true;
+        }
+      }
+      return item;
+    });
+
+    setJadwal(updatedJadwal);
+  }, [jadwalPeriksa, id]);
 
   useEffect(() => {
     dispatch(getJadwalPeriksa());
@@ -85,35 +118,39 @@ const JadwalPeriksa = () => {
                 <Table.HeadCell>Aksi</Table.HeadCell>
               </Table.Head>
               <Table.Body className="divide-y">
-                {jadwalPeriksa.map((item, index) => (
-                  <Table.Row key={index}>
-                    <Table.Cell>{index + 1}</Table.Cell>
-                    <Table.Cell>{item.dokter.nama}</Table.Cell>
-                    <Table.Cell>{item.hari}</Table.Cell>
-                    <Table.Cell>{timeFormat(item.jam_mulai)}</Table.Cell>
-                    <Table.Cell>{timeFormat(item.jam_selesai)}</Table.Cell>
-                    <Table.Cell>{dateFormat(item.tanggal)}</Table.Cell>
-                    <Table.Cell>
-                      <Link
-                        className="bg-[#F1B4BB] p-2 rounded text-white mx-2"
-                        to={
-                          "/dokter/jadwal-periksa/kelola-jadwal/" +
-                          item.id +
-                          "/" +
-                          id
-                        }
-                      >
-                        Edit
-                      </Link>
-                      <button
-                        className="bg-red-500 p-2 rounded text-white"
-                        onClick={() => handleDelete(item.id)}
-                      >
-                        Hapus
-                      </button>
-                    </Table.Cell>
-                  </Table.Row>
-                ))}
+                {jadwal.map((item, index) => {
+                  if (item.id_dokter === id) {
+                    index = 0;
+                    return (
+                      <Table.Row key={index}>
+                        <Table.Cell>{index + 1}</Table.Cell>
+                        <Table.Cell>{item.dokter.nama}</Table.Cell>
+                        <Table.Cell>{item.hari}</Table.Cell>
+                        <Table.Cell>{timeFormat(item.jam_mulai)}</Table.Cell>
+                        <Table.Cell>{timeFormat(item.jam_selesai)}</Table.Cell>
+                        <Table.Cell>{dateFormat(item.tanggal)}</Table.Cell>
+                        <Table.Cell>
+                          <Link
+                            className={`bg-[#ff8d9a] p-2 rounded text-white mx-2 ${
+                              item.disableEdit
+                                ? "opacity-50 pointer-events-none"
+                                : ""
+                            }`}
+                            to={`/dokter/jadwal-periksa/kelola-jadwal/${item.id}/${id}`}
+                          >
+                            Edit
+                          </Link>
+                          <button
+                            className="bg-red-500 p-2 rounded text-white"
+                            onClick={() => handleDelete(item.id)}
+                          >
+                            Hapus
+                          </button>
+                        </Table.Cell>
+                      </Table.Row>
+                    );
+                  }
+                })}
               </Table.Body>
             </Table>
           </div>

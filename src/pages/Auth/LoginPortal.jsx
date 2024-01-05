@@ -3,7 +3,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
 import Modals from "../../components/Modals";
 import { useState } from "react";
-import { Checkbox, Label, TextInput } from "flowbite-react";
+import { Checkbox, Label, Spinner, TextInput } from "flowbite-react";
 import { HiLockClosed, HiMail } from "react-icons/hi";
 import { useDispatch } from "react-redux";
 import { loginAdmin } from "../../config/Redux/Action/adminAction";
@@ -13,6 +13,7 @@ import {
   loginPasien,
   registerPasien,
 } from "../../config/Redux/Action/pasienAction";
+import { ToastContainer } from "react-toastify";
 
 const LoginPortal = () => {
   const dispatch = useDispatch();
@@ -41,20 +42,21 @@ const LoginPortal = () => {
     username: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleLoginAdmin = (e) => {
     e.preventDefault();
-    dispatch(loginAdmin(adminForm, nav));
+    dispatch(loginAdmin(adminForm, nav, setLoading, setAdmin));
   };
 
   const handleLoginDokter = (e) => {
     e.preventDefault();
-    dispatch(loginDokter(dokterForm, nav));
+    dispatch(loginDokter(dokterForm, nav, setLoading, setDokter));
   };
 
   const handleRegisterPasien = (e) => {
     e.preventDefault();
-    dispatch(registerPasien(pasienRegister, setRegister));
+    dispatch(registerPasien(pasienRegister, setRegister, setLoading));
     setPasienRegister({
       nama: "",
       no_ktp: "",
@@ -67,7 +69,7 @@ const LoginPortal = () => {
 
   const handleLoginPasien = (e) => {
     e.preventDefault();
-    dispatch(loginPasien(pasienForm, nav));
+    dispatch(loginPasien(pasienForm, nav, setLoading, setPasien));
     setPasienForm({
       username: "",
       password: "",
@@ -77,8 +79,9 @@ const LoginPortal = () => {
 
   return (
     <>
-      <div className="min-h-screen relative bg-[#12486B]">
-        <div className="flex items-center h-screen justify-center flex-col container mx-auto relative z-20">
+      <ToastContainer />
+      <div className=" bg-[#12486B]">
+        <div className="flex items-center justify-center flex-col container mx-auto py-[10rem] ">
           <h1 className="text-4xl font-bold text-white mb-[5rem]">
             {" "}
             Login Portal{" "}
@@ -132,6 +135,7 @@ const LoginPortal = () => {
             </div>
           </div>
         </div>
+
         <Modals
           openModal={pasien}
           setOpenModal={setPasien}
@@ -185,12 +189,24 @@ const LoginPortal = () => {
                       Remember Me
                     </Label>
                   </div>
-                  <button
-                    className="bg-[#132043] text-white p-2 px-4 rounded-lg w-fit"
-                    type="submit"
-                  >
-                    Login
-                  </button>
+                  {loading ? (
+                    <button
+                      className="bg-[#12486B] text-white p-2 px-4 rounded-lg w-fit"
+                      type="button"
+                    >
+                      <Spinner
+                        color="success"
+                        aria-label="Success spinner example"
+                      />
+                    </button>
+                  ) : (
+                    <button
+                      className="bg-[#12486B] text-white p-2 px-4 rounded-lg w-fit"
+                      type="submit"
+                    >
+                      Login
+                    </button>
+                  )}
                 </div>
               </form>
             </>
@@ -315,12 +331,24 @@ const LoginPortal = () => {
                       </a>
                     </Label>
                   </div>
-                  <button
-                    className="bg-[#132043] text-white p-2 px-4 rounded-lg w-fit"
-                    type="submit"
-                  >
-                    Register
-                  </button>
+                  {loading ? (
+                    <button
+                      className="bg-[#12486B] text-white p-2 px-4 rounded-lg w-fit"
+                      type="button"
+                    >
+                      <Spinner
+                        color="success"
+                        aria-label="Success spinner example"
+                      />
+                    </button>
+                  ) : (
+                    <button
+                      className="bg-[#12486B] text-white p-2 px-4 rounded-lg w-fit"
+                      type="submit"
+                    >
+                      Register
+                    </button>
+                  )}
                 </div>
                 <div className="flex justify-end text-sm text-[#132043] hover:underline my-1">
                   <button
@@ -383,12 +411,24 @@ const LoginPortal = () => {
                       Remember Me
                     </Label>
                   </div>
-                  <button
-                    className="bg-[#132043] text-white p-2 px-4 rounded-lg w-fit"
-                    type="submit"
-                  >
-                    Login
-                  </button>
+                  {loading ? (
+                    <button
+                      className="bg-[#12486B] text-white p-2 px-4 rounded-lg w-fit"
+                      type="button"
+                    >
+                      <Spinner
+                        color="success"
+                        aria-label="Success spinner example"
+                      />
+                    </button>
+                  ) : (
+                    <button
+                      className="bg-[#12486B] text-white p-2 px-4 rounded-lg w-fit"
+                      type="submit"
+                    >
+                      Login
+                    </button>
+                  )}
                 </div>
               </form>
             </>
@@ -442,12 +482,24 @@ const LoginPortal = () => {
                       Remember Me
                     </Label>
                   </div>
-                  <button
-                    className="bg-[#132043] text-white p-2 px-4 rounded-lg w-fit"
-                    type="submit"
-                  >
-                    Login
-                  </button>
+                  {loading ? (
+                    <button
+                      className="bg-[#12486B] text-white p-2 px-4 rounded-lg w-fit"
+                      type="button"
+                    >
+                      <Spinner
+                        color="success"
+                        aria-label="Success spinner example"
+                      />
+                    </button>
+                  ) : (
+                    <button
+                      className="bg-[#12486B] text-white p-2 px-4 rounded-lg w-fit"
+                      type="submit"
+                    >
+                      Login
+                    </button>
+                  )}
                 </div>
               </form>
             </>

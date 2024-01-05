@@ -18,6 +18,7 @@ import { getAdmin, logoutAdmin } from "../config/Redux/Action/adminAction";
 import { useDispatch, useSelector } from "react-redux";
 import { getDokter, logoutDokter } from "../config/Redux/Action/dokterAction";
 import { IoLogOut } from "react-icons/io5";
+import { ToastContainer } from "react-toastify";
 
 const Sidebars = () => {
   const pathName = useLocation().pathname;
@@ -71,6 +72,7 @@ const Sidebars = () => {
 
   return (
     <>
+      <ToastContainer />
       <div className="flex h-screen">
         <nav className="sidebar bg-[#1F4172] w-fit p-2 h-screen">
           <div className="flex flex-row items-center justify-start p-4">

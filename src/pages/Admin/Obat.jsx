@@ -27,14 +27,7 @@ const Obat = () => {
     kemasan: "",
     harga: "",
   });
-
-  const handleResetForm = () => {
-    setObatForm({
-      nama_obat: "",
-      kemasan: "",
-      harga: "",
-    });
-  };
+  const [idObat, setIdObat] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -48,16 +41,16 @@ const Obat = () => {
 
   const handleEdit = (id) => {
     setEditObat(true);
-    dispatch(getObatById(id));
+    setIdObat(id);
   };
 
   const handleDelete = (id) => {
     dispatch(deleteObat(id));
   };
 
-  const handleSumbitEdit = (e, id) => {
+  const handleSumbitEdit = (e) => {
     e.preventDefault();
-    dispatch(updateObat(id, obatEditForm));
+    dispatch(updateObat(idObat, obatEditForm));
     setEditObat(false);
   };
 
@@ -71,6 +64,12 @@ const Obat = () => {
   useEffect(() => {
     dispatch(getObat());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (idObat) {
+      dispatch(getObatById(idObat));
+    }
+  }, [idObat, dispatch]);
 
   useEffect(() => {
     setObatEditForm({
@@ -122,11 +121,14 @@ const Obat = () => {
           <div className="flex justify-end mt-4">
             <button
               className="bg-slate-500 p-2 px-3 text-sm rounded-md text-white"
-              onClick={handleResetForm}
+              type="reset"
             >
               Reset Form
             </button>
-            <button className="bg-[#F1B4BB] p-2 px-3 text-sm rounded-md text-white mx-2">
+            <button
+              className="bg-[#ff8d9a] p-2 px-3 text-sm rounded-md text-white mx-2"
+              type="submit"
+            >
               Tambah
             </button>
           </div>
@@ -155,82 +157,79 @@ const Obat = () => {
                       <Table.Cell>{formatPriceInRupiah(item.harga)}</Table.Cell>
                       <Table.Cell>
                         <button
-                          className="bg-[#F1B4BB] p-2 px-3 rounded text-white mx-2"
+                          className="bg-[#ff8d9a] p-2 rounded text-white mx-2"
                           onClick={() => handleEdit(item.id)}
                         >
                           Edit
                         </button>
                         <button
-                          className="bg-red-500 p-2 px-3 rounded text-white mx-2"
+                          className="bg-red-500 p-2 rounded text-white mx-2"
                           onClick={() => handleDelete(item.id)}
                         >
                           Hapus
                         </button>
                       </Table.Cell>
-                      <Modals
-                        openModal={editObat}
-                        setOpenModal={() => setEditObat(false)}
-                        title={"Edit Obat"}
-                        buttonClose={false}
-                        body={
-                          <form
-                            className="flex flex-col"
-                            onSubmit={(e) => handleSumbitEdit(e, item.id)}
-                          >
-                            <Input
-                              label="Nama Obat"
-                              type="text"
-                              placeholder="Nama Obat"
-                              name={"nama_obat"}
-                              value={obatEditForm.nama_obat}
-                              onChange={(e) =>
-                                setObatEditForm({
-                                  ...obatEditForm,
-                                  nama_obat: e.target.value,
-                                })
-                              }
-                            />
-                            <Input
-                              label="Kemasan"
-                              type="text"
-                              placeholder="Kemasan"
-                              name={"kemasan"}
-                              value={obatEditForm.kemasan}
-                              onChange={(e) =>
-                                setObatEditForm({
-                                  ...obatEditForm,
-                                  kemasan: e.target.value,
-                                })
-                              }
-                            />
-                            <Input
-                              label="Harga"
-                              type="number"
-                              placeholder="Harga"
-                              name={"harga"}
-                              value={obatEditForm.harga}
-                              onChange={(e) =>
-                                setObatEditForm({
-                                  ...obatEditForm,
-                                  harga: e.target.value,
-                                })
-                              }
-                            />
-                            <div className="flex justify-end mt-4">
-                              <button
-                                className="bg-[#1F4172] p-2 px-3 rounded text-white mx-2"
-                                type="submit"
-                              >
-                                Update
-                              </button>
-                            </div>
-                          </form>
-                        }
-                      />
                     </Table.Row>
                   ))}
                 </Table.Body>
               </Table>
+              <Modals
+                openModal={editObat}
+                setOpenModal={() => setEditObat(false)}
+                title={"Edit Obat"}
+                buttonClose={false}
+                body={
+                  <form className="flex flex-col" onSubmit={handleSumbitEdit}>
+                    <Input
+                      label="Nama Obat"
+                      type="text"
+                      placeholder="Nama Obat"
+                      name={"nama_obat"}
+                      value={obatEditForm.nama_obat}
+                      onChange={(e) =>
+                        setObatEditForm({
+                          ...obatEditForm,
+                          nama_obat: e.target.value,
+                        })
+                      }
+                    />
+                    <Input
+                      label="Kemasan"
+                      type="text"
+                      placeholder="Kemasan"
+                      name={"kemasan"}
+                      value={obatEditForm.kemasan}
+                      onChange={(e) =>
+                        setObatEditForm({
+                          ...obatEditForm,
+                          kemasan: e.target.value,
+                        })
+                      }
+                    />
+                    <Input
+                      label="Harga"
+                      type="number"
+                      placeholder="Harga"
+                      name={"harga"}
+                      value={obatEditForm.harga}
+                      onChange={(e) =>
+                        setObatEditForm({
+                          ...obatEditForm,
+                          harga: e.target.value,
+                        })
+                      }
+                    />
+                    <div className="flex justify-end mt-4">
+                      <button
+                        className="bg-[#ff8d9a] p-2 px-3 rounded text-white mx-2"
+                        type="submit"
+                      >
+                        Update
+                      </button>
+                    </div>
+                  </form>
+                }
+              />
             </div>
           </div>
         </div>

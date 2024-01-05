@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
 export const getObat = () => {
@@ -47,9 +48,11 @@ export const storeObat = (data) => {
         }
       );
 
+      toast.success("Berhasil ditambahkan");
       dispatch(getObat());
     } catch (err) {
       console.log(err);
+      toast.error(err.response.data.error);
     }
   };
 };
@@ -72,9 +75,11 @@ export const updateObat = (id, data) => {
         }
       );
 
+      toast.success("Berhasil diupdate");
       dispatch(getObat());
     } catch (err) {
       console.log(err);
+      toast.error(err.response.data.error);
     }
   };
 };

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export const getAdmin = (token, isLogin = false, nav) => {
   return async (dispatch) => {
@@ -19,23 +20,26 @@ export const getAdmin = (token, isLogin = false, nav) => {
   };
 };
 
-export const loginAdmin = (data, nav) => {
+export const loginAdmin = (data, nav, setLoading, setAdmin) => {
   return async (dispatch) => {
-    dispatch({ type: "SET_IS_LOADING", payload: true });
+    setLoading(true);
+    const timer = 2000;
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}api/auth/admin/login`,
         data
       );
       localStorage.setItem("token", res.data.access_token);
-      dispatch({ type: "SET_ERROR_MESSAGE_ADMIN", payload: "" });
-      dispatch(getAdmin(res.data.access_token, true, nav));
+      toast.success("Login Berhasil", { autoClose: timer });
+      setTimeout(() => {
+        dispatch(getAdmin(res.data.access_token, true, nav));
+        setLoading(false);
+        setAdmin(false);
+      }, timer);
     } catch (err) {
       console.log(err.response.data.error);
-      dispatch({
-        type: "SET_ERROR_MESSAGE_ADMIN",
-        payload: err.response.data.error,
-      });
+      toast.error(err.response.data.error);
+      setLoading(false);
     }
   };
 };
@@ -49,6 +53,7 @@ export const logoutAdmin = (token, nav) => {
       dispatch({ type: "SET_IS_LOGIN", payload: false });
       dispatch({ type: "SET_ADMIN", payload: {} });
       nav("/");
+      localStorage.removeItem("role");
     } catch (err) {
       console.log(err);
     }

@@ -1,5 +1,7 @@
 const initialState = {
   pasien: {},
+  pasienAll: [],
+  pasienById: {},
   isLogin: false,
   errorMessagePasien: "",
 };
@@ -15,6 +17,16 @@ const pasienReducer = (state = initialState, action) => {
       return {
         ...state,
         isLogin: action.payload,
+      };
+    case "SET_PASIEN_ALL":
+      return {
+        ...state,
+        pasienAll: action.payload,
+      };
+    case "SET_PASIEN_BY_ID":
+      return {
+        ...state,
+        pasienById: action.payload,
       };
     case "SET_ERROR_MESSAGE_PASIEN":
       return {

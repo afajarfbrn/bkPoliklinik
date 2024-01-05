@@ -1,5 +1,7 @@
 const initialState = {
   dokter: {},
+  allDokter: [],
+  dokterById: {},
   isLoginDokter: false,
 };
 
@@ -14,6 +16,16 @@ const dokterReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoginDokter: action.payload,
+      };
+    case "SET_ALL_DOKTER":
+      return {
+        ...state,
+        allDokter: action.payload,
+      };
+    case "SET_DOKTER_BY_ID":
+      return {
+        ...state,
+        dokterById: action.payload,
       };
     default:
       return state;

@@ -1,6 +1,7 @@
 const initialState = {
   daftarPoli: [],
   daftarPoliById: {},
+  daftarPoliByPasienId: {},
   loading: false,
   error: null,
 };
@@ -16,6 +17,11 @@ const daftarPoliReducer = (state = initialState, action) => {
       return {
         ...state,
         daftarPoliById: action.payload,
+      };
+    case "SET_DAFTAR_POLI_BY_PASIEN_ID":
+      return {
+        ...state,
+        daftarPoliByPasienId: action.payload,
       };
     default:
       return state;

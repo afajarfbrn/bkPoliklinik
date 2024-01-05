@@ -20,6 +20,7 @@ import "swiper/css/pagination";
 import LoginPortal from "./pages/Auth/LoginPortal";
 import { Provider } from "react-redux";
 import { store } from "./config";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (

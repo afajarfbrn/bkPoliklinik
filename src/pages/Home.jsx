@@ -48,6 +48,8 @@ const Home = () => {
     keluhan: "",
   });
 
+  console.log(role);
+
   const handleLogoutAdmin = () => {
     dispatch(logoutAdmin(token, nav));
   };
@@ -151,18 +153,29 @@ const Home = () => {
 
   useEffect(() => {
     if (jadwalPeriksa) {
-      const data = jadwalPeriksa.map((item) => {
-        if (item.dokter.poli.nama_poli === selectedPoli) {
-          return {
-            value: item.id,
-            label: `Dr. ${item.dokter.nama}, ${item.hari}, ${dateFormat(
-              item.tanggal
-            )}, jam ${timeFormat(item.jam_mulai)} sampai ${timeFormat(
-              item.jam_selesai
-            )}`,
-          };
-        }
-      });
+      const currentDate = new Date();
+      const data = jadwalPeriksa
+        .map((item) => {
+          const date = item.tanggal.split(" ")[0];
+          const time = new Date(`${date}T${item.jam_mulai}`);
+          if (
+            item.dokter.poli.nama_poli === selectedPoli &&
+            time >= currentDate
+          ) {
+            return {
+              value: item.id,
+              label: `Dr. ${item.dokter.nama}, ${item.hari}, ${dateFormat(
+                item.tanggal
+              )}, jam ${timeFormat(item.jam_mulai)} sampai ${timeFormat(
+                item.jam_selesai
+              )}`,
+            };
+          }
+          // Jika kondisi tidak terpenuhi, kembalikan null atau objek kosong
+          return null; // atau return {};
+        })
+        .filter((item) => item !== null); // Filter elemen yang bernilai null
+
       setJadwal(data);
     }
   }, [jadwalPeriksa, selectedPoli]);
@@ -188,13 +201,6 @@ const Home = () => {
             as={Link}
           >
             Home
-          </Navbar.Link>
-          <Navbar.Link
-            as={Link}
-            href="/dashboard"
-            className="flex items-center h-full text-white"
-          >
-            About
           </Navbar.Link>
           {id && token ? (
             <>
@@ -259,7 +265,7 @@ const Home = () => {
         </Navbar.Collapse>
       </Navbar>
 
-      <main className="container mx-auto">
+      <main className="">
         {/* Hero Section */}
         <section className="relative">
           <div className="flex justify-center z-0">
@@ -287,7 +293,7 @@ const Home = () => {
                   Daftar Poli
                   <MdOutlineArrowRightAlt color="white" className="ml-2" />
                 </button>
-              ) : role !== "" ? (
+              ) : role === "admin" || role === "dokter" ? (
                 <Link
                   to={`/${role}/${role === "admin" ? admin.id : dokter.id}`}
                   className="bg-[#1F4172] p-2 px-3 mt-4 text-white flex w-fit items-center rounded-md"
@@ -297,7 +303,7 @@ const Home = () => {
                 </Link>
               ) : (
                 <Link
-                  to={`/register`}
+                  to={`/login`}
                   className="bg-[#1F4172] p-2 px-3 mt-4 text-white flex w-fit items-center rounded-md"
                 >
                   Register Now{" "}
