@@ -8,6 +8,7 @@ import {
   getJadwalPeriksaById,
   updateJadwalPeriksa,
 } from "../../../config/Redux/Action/jadwalPeriksaAction";
+import ReactSelect from "../../../components/ReactSelect";
 
 const KelolaJadwalPeriksa = () => {
   const pathName = useLocation().pathname;
@@ -24,6 +25,7 @@ const KelolaJadwalPeriksa = () => {
     jam_mulai: "",
     jam_selesai: "",
     tanggal: "",
+    status: ""
   });
 
   const handleSubmit = (e) => {
@@ -54,9 +56,23 @@ const KelolaJadwalPeriksa = () => {
         jam_mulai: jadwalPeriksaById.jam_mulai,
         jam_selesai: jadwalPeriksaById.jam_selesai,
         tanggal: jadwalPeriksaById.tanggal,
+        status: jadwalPeriksaById.status,
       });
     }
   }, [id, jadwalPeriksaById]);
+
+  useEffect(() => {
+    if (idJadwal === undefined) {
+      setAddForm({
+        id_dokter: id,
+        hari: "",
+        jam_mulai: "",
+        jam_selesai: "",
+        tanggal: "",
+        status: "",
+      });
+    }
+  }, [dispatch, idJadwal]);
 
   return (
     <div className="container min-h-[90vh] m-5 my-[3rem]">
@@ -127,6 +143,21 @@ const KelolaJadwalPeriksa = () => {
               onChange={(e) =>
                 setAddForm({ ...addForm, tanggal: e.target.value })
               }
+            />
+            <ReactSelect
+              data={[
+                { value: "Y", label: "Aktif" },
+                { value: "N", label: "Tidak Aktif" },
+              ]}
+              title="Status"
+              value={
+                addForm.status === "Y"
+                  ? { label: "Aktif" }
+                  : addForm.status === "N"
+                  ? { label: "Tidak Aktif" }
+                  : null
+              }
+              onChange={(e) => setAddForm({ ...addForm, status: e.value })}
             />
             <div className="flex justify-end mt-4">
               <button

@@ -56,22 +56,8 @@ const JadwalPeriksa = () => {
     // Lakukan pengecekan untuk setiap item jadwalPeriksa
     const updatedJadwal = jadwalPeriksa.map((item) => {
       if (item.id_dokter === id) {
-        // Mendapatkan waktu mulai dari jadwal periksa saat ini
-        const tanggal = item.tanggal.split(" ")[0];
-        const startTime = new Date(`${tanggal}T${item.jam_mulai}`);
-        const oneHourBefore = new Date(startTime.getTime() - 60 * 60 * 1000); // Satu jam sebelum
+        return item;
 
-        // Jika waktu mulai dari jadwal periksa saat ini lebih dari satu jam sebelum waktu saat ini
-        // maka disableEdit: false
-        if (
-          startTime > oneHourBefore &&
-          startTime > now &&
-          now <= oneHourBefore
-        ) {
-          item.disableEdit = false;
-        } else {
-          item.disableEdit = true;
-        }
       }
       return item;
     });
@@ -132,7 +118,7 @@ const JadwalPeriksa = () => {
                         <Table.Cell>
                           <Link
                             className={`bg-[#ff8d9a] p-2 rounded text-white mx-2 ${
-                              item.disableEdit
+                              item.status === "N"
                                 ? "opacity-50 pointer-events-none"
                                 : ""
                             }`}
@@ -140,12 +126,6 @@ const JadwalPeriksa = () => {
                           >
                             Edit
                           </Link>
-                          <button
-                            className="bg-red-500 p-2 rounded text-white"
-                            onClick={() => handleDelete(item.id)}
-                          >
-                            Hapus
-                          </button>
                         </Table.Cell>
                       </Table.Row>
                     );
